@@ -38,6 +38,36 @@ namespace HuiChengSite.Common
             return t;
         }
 
+        private static readonly object _ZhCnlocker = new object();
+        public static T GetZhCn<T>(string fileName) where T : class
+        {
+            lock (_ZhCnlocker)
+            {
+                string path = HttpContext.Current.Server.MapPath($"language/zh-cn/{fileName}.json");
+                if (!File.Exists(path))
+                {
+                    return default(T);
+                }
+                var json = File.ReadAllText(path);
+                return JsonConvert.DeserializeObject<T>(json);
+            }
+        }
+
+        private static readonly object _Enlocker = new object();
+        public static T GetEn<T>(string fileName) where T : class
+        {
+            lock (_Enlocker)
+            {
+                string path = HttpContext.Current.Server.MapPath($"language/en/{fileName}.json");
+                if (!File.Exists(path))
+                {
+                    return default(T);
+                }
+                var json = File.ReadAllText(path);
+                return JsonConvert.DeserializeObject<T>(json);
+            }
+        }
+
         /// <summary>
         /// 解析JSON数组生成对象实体集合
         /// </summary>

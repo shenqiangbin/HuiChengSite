@@ -51,5 +51,5 @@ public static class Config
     public static int GetInt(string key)
     {
         return GetValue<int>(key);
-    }
+    }    
 }

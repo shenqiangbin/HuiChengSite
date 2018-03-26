@@ -665,6 +665,9 @@
     <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HistoryController.cs" />
+    <Compile Include="Controllers\IntroduceController.cs" />
+    <Compile Include="Controllers\LangController.cs" />
     <Compile Include="Controllers\RSAController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\XSSController.cs" />
@@ -677,6 +680,8 @@
     <Compile Include="Models\CommentListModel.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Label.cs" />
+    <Compile Include="Models\LanguageEnum.cs" />
+    <Compile Include="Models\LayoutModel.cs" />
     <Compile Include="Models\LogListModel.cs" />
     <Compile Include="Models\Log.cs" />
     <Compile Include="Models\User.cs" />
@@ -727,6 +732,16 @@
     <Content Include="controller.ashx" />
     <Content Include="config.json" />
     <Content Include="Areas\backmgr\Views\Comment\List.cshtml" />
+    <Content Include="Views\Default\Index.cshtml" />
+    <Content Include="language\en\IntroduceModel.json" />
+    <Content Include="language\zh-cn\IntroduceModel.json" />
+    <Content Include="Views\Introduce\Index.cshtml" />
+    <Content Include="language\en\HistoryModel.json" />
+    <Content Include="language\zh-cn\HistoryModel.json" />
+    <Content Include="Views\History\Index.cshtml" />
+    <Content Include="language\en\LayoutModel.json" />
+    <Content Include="language\zh-cn\LayoutModel.json" />
+    <None Include="Views\Shared\_Layout-bak.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -740,6 +755,7 @@
     <Folder Include="Areas\backmgr\Views\Db\" />
     <Folder Include="Images\emoji\" />
     <Folder Include="Views\Comment\" />
+    <Folder Include="Views\Language\" />
     <Folder Include="Views\RSA\" />
     <Folder Include="Views\XSS\" />
   </ItemGroup>
