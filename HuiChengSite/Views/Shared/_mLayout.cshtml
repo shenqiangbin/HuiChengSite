@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>@ViewBag.Title | SQBER</title>
+    <meta name="description" content="SQBER的博客 @ViewBag.Title" />
+    <meta name="keywords" content="@(!string.IsNullOrEmpty(ViewBag.Keywords)? ViewBag.Keywords : "SQBER的博客,MVC,.NET,ASP.NET,ASP.NET MVC,JS,JavaScript,JQuery")" />
+    @Styles.Render("~/Content/mcss")
+    @RenderSection("header", required: false)
+</head>
+<body>
+    <div class="hidden"><img src="~/Images/bigtou.jpg" /></div>
+    <div class="nav">
+        <div class="nav-content">
+            <span class="logo"><a href="http://www.sqber.com">博客</a></span>
+            <a href="/">首页</a>
+            <a href="/">分类</a>
+            <a href="/">关于</a>
+            <a style="float:right;margin-top:4px;" href="/backmgr/home">管理</a>
+        </div>
+    </div>
+    <div class="container">
+          @RenderBody()
+    </div>
+    <div class="copyright">
+        <div>sqber  2017-@DateTime.Now.Year 冀ICP备17029815</div>
+    </div>
+
+    @RenderSection("footer", required: false)
+    @*<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>*@
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?ef18c725ee26ac659f672367d8d541ee";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+</body>
+</html>

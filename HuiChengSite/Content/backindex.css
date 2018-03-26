@@ -1,0 +1,36 @@
+﻿.backIndexNav{
+    padding-top:20px;
+}
+
+.backIndexNav a{
+    margin-right:20px;
+}
+
+.record {
+    border-bottom: 1px solid gray;
+    margin-bottom: 5px;
+    line-height: 30px;
+    padding: 5px;
+}
+
+    .record:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+.indexcontainer {
+    margin-top: 30px;
+}
+
+.operate {
+    font-size: 12px;
+}
+
+    .operate .date {
+        margin-right: 40px;
+    }
+
+    .operate .author{
+        margin-right: 20px;
+        width: 220px;
+        display: inline-block;
+    }

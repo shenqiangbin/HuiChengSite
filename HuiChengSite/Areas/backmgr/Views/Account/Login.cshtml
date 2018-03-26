@@ -1,0 +1,163 @@
+﻿
+@{
+    ViewBag.Title = "博客后台";
+}
+
+<style>
+    /*背景图片*/
+    .bgcontainer {
+        text-align: center;
+        background-color: #0f51b2;
+        margin-top: 8%;
+    }
+
+    .imgcontainer {
+        margin: 0 auto;
+        width: 1280px;
+        height: 474px;
+        border: 0px solid red;
+        background: url(/Images/login-background.png) no-repeat;
+    }
+
+    input{
+         width: 240px;
+    }
+
+    /*背景图片*/
+    .lgContent {
+        float: right;
+        margin-top: 42px;
+        margin-right: 240px;
+        width: 340px;
+        height: 348px;
+        text-align: center;
+        background-color: #FFFFFF;
+        /*padding: 2px 20px 20px 20px;*/
+        border-radius: 0px;
+        border: 0px solid blue;
+    }
+
+        .lgContent h2 {
+            padding: 0px;
+            margin: 0px;
+            font-size: 20px;
+            color: #222222;
+            margin-top: 36px;
+            margin-bottom: 10px;
+            border: 0px solid;
+            letter-spacing: 1.78px;
+        }
+
+    /*每一行*/
+    .lg-row {
+        margin: 0 auto;
+        margin-bottom: 20px;
+        width: 240px;
+        border: 0px solid blue;
+        text-align: left;
+    }
+
+    /*信息展示*/
+    .info {
+        margin: 0 auto;
+        margin-bottom: 4px;
+        width: 240px;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #F04134;
+        text-align: left;
+        border: 0px solid red;
+    }
+
+    .infopre {
+        width: 14px;
+        height: 14px;
+        vertical-align: bottom;
+        margin-right:7px;
+    }
+
+    .codeInput {
+        width: 140px !important;
+    }
+
+    .lg-row img {
+        float: right;
+        width: 80.2px;
+        height: 36px;
+        vertical-align: top;
+        cursor: pointer;
+        box-sizing: border-box;
+    }
+
+button{
+     width: 240px;
+     height: 38px;
+     letter-spacing: 2.78px;
+}
+
+</style>
+
+
+
+<div class="bgcontainer">
+    <div class="imgcontainer">
+        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { id = "", @class = "", role = "form" }))
+        {
+            <input type="hidden" name="tmpToken" />
+
+            @Html.AntiForgeryToken()
+
+            <div class="lgContent">
+                <h2>博客后台</h2>
+                @if (!string.IsNullOrEmpty(ViewBag.Msg))
+                {
+                    <div class="info"><img class="infopre" src="~/Images/tip.svg"/>@ViewBag.Msg</div>
+                }
+                else
+                {
+                    <div class="info">&nbsp;</div>
+                }
+                <div class="lg-row">
+                    <input type="text" id="email" name="email" value="@ViewBag.Email" placeholder="游客账号：guest@163.com" maxlength="50" />
+                </div>
+                <div class="lg-row">
+                    <input type="password" class="form-control" id="password" placeholder="游客密码：123" maxlength="50" />
+                    <input type="hidden" name="password" />
+                </div>
+                <div class="lg-row">
+                    <input type="text" class="codeInput" id="validateCode" name="validateCode" placeholder="请输入验证码" />
+                    <img alt="刷新验证码！" src="~/verify_code.ashx" onclick="this.src=this.src+'?'" />
+                </div>
+                <button type="button" class="btn btn-default" onclick="login()">登录</button>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+@section footer{
+    @Scripts.Render("~/Scripts/rsa/js")
+
+    <script>
+        function login() {
+            var pwd = $("#password").val();
+            var result = RSAClient.Encryt([pwd]);
+
+            $("input[name=tmpToken]").val(result.tmpToken);
+            $("input[name=password]").val(result.encryptData[0]);
+
+            $("form").submit();
+        }
+
+        $("body").keydown(function () {
+            if (event.keyCode == "13") {//keyCode=13是回车键
+                login();
+            };
+        });
+        //var data={usercode:'abc',username:'de'};
+        //$.post('http://localhost:32311/api/user/Add', data, function (d) {
+        //    console.log(d);
+        //});
+    </script>
+}

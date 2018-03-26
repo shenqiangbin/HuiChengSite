@@ -1,0 +1,92 @@
+﻿@model StaticPagedList<Article>
+
+@{
+    ViewBag.Title = "列表";
+}
+
+@section header{
+    @Styles.Render("~/Content/backindex")
+}
+<div class="content">
+    <div class="backIndexNav">
+        <a href="@Url.Action("Add","Article")">写博客</a>
+        <a href="@Url.Action("List","Comment")">评论管理</a>
+        <a href="@Url.Action("Download","Db")">数据库备份下载</a>
+        <a target="_blank" href="https://tongji.baidu.com/web/welcome/ico?s=ef18c725ee26ac659f672367d8d541ee">百度统计</a>
+    </div>
+
+    <div class="indexcontainer">
+        @if (Model == null || Model.Count == 0)
+        {
+            <div class="record">
+                暂无数据
+            </div>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+
+                <div class="record">
+                    <div>
+                        <a href="@Url.Action("Detail","Home", new { area = "", id =item.ArticleId } )" title="@item.Title" target="_blank">
+                            <span>@item.Title</span>
+                        </a>
+                    </div>
+                    <div class="operate">
+                        <span class="date">@item.DisplayCreatedTime.ToString("yyyy-MM-dd")</span>
+                        <span class="author">作者：@(item.CreateUser)</span>
+                        <a href="@Url.Action("Add","Article", new { id = item.ArticleId })">编辑</a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="javascript:void(0)" onclick="publish(@item.ArticleId)">@(item.PublishStatus == (int)PublishStatus.Published ? "取消发布" : "发布")</a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="javascript:void(0)" onclick="del(@item.ArticleId)">删除</a>
+                    </div>
+                </div>
+
+
+            }
+        }
+        @if (Model.PageCount > 1)
+        {
+            <div>@Html.PagedListPager((IPagedList)(Model), p => Url.Action("Index", new { page = p }), PagedListRenderOptions.ClassicPlusFirstAndLast)</div>
+        }
+
+        @Html.AntiForgeryToken()
+    </div>
+</div>
+@section footer{
+    <script>
+        $(function () {
+
+        });
+
+        function del(id) {
+            if (confirm("确定删除吗？")) {
+                var url = '@Url.Action("Del","Article")';
+                $.post(url, AddAntiForgeryToken({ id: id }), function (data) {
+                    if (data.code == 200)
+                        window.document.location.reload();
+                    else
+                        msger.tip(data.msg);
+                });
+            }
+        }
+
+        function publish(id) {
+            var url = '@Url.Action("Publish","Article")';
+            $.post(url, AddAntiForgeryToken({ id: id }), function (data) {
+                if (data.code == 200)
+                    window.document.location.reload();
+                else
+                    msger.tip(data.msg);
+            });
+        }
+
+        AddAntiForgeryToken = function (data) {
+            data.__RequestVerificationToken = $('input[name=__RequestVerificationToken]').val();
+            return data;
+        };
+
+    </script>
+}

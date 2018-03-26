@@ -1,0 +1,385 @@
+﻿@model Article
+
+@{
+    ViewBag.Title = ViewBag.IsNew ? "新增文章" : "编辑文章";
+    string backUrl = Request.UrlReferrer != null ? Request.UrlReferrer.OriginalString : "/backmgr/home";
+}
+
+<style>
+    .titleContainer {
+        margin: 20px auto;
+    }
+
+    .title {
+        font-weight: bold;
+        margin-right: 20px;
+        font-size: large;
+    }
+
+    .form-line {
+        border: 0px solid red;
+        margin-bottom: 15px;
+    }
+
+        .form-line div:first-child {
+            margin-bottom: 5px;
+        }
+
+    .addtitle {
+        width: 100%;
+    }
+
+    textarea {
+        width: 100%;
+    }
+
+    .handleContainer {
+        position: fixed;
+        top: 10%;
+        right: 0%;
+        z-index: 999;
+        background-color: green;
+        padding: 20px;
+    }
+
+    .handlearea {
+    }
+
+    .savebtn {
+        margin-right: 50px;
+    }
+
+    .msg {
+        margin-top: 10px;
+        font-size: small;
+        color: red;
+    }
+
+    #labelContainer {
+        display: inline-block;
+        margin: 10px;
+    }
+
+        #labelContainer div {
+            display: inline-block;
+            border: 1px solid gray;
+            margin-right: 10px;
+            cursor: pointer;
+            padding-left: 2px;
+        }
+
+            #labelContainer div span {
+                border: 1px solid gray;
+                display: inline-block;
+                cursor: pointer;
+                background-color: gray;
+            }
+
+    #labelDb {
+        border: 1px solid gray;
+        padding: 5px;
+        margin-top: 5px;
+    }
+
+        #labelDb div {
+            border: 1px solid gray;
+            display: inline-block;
+            padding: 2px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+            #labelDb div:hover {
+                background: red;
+            }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<div class="content">
+    <div class="titleContainer">
+        <span class="title">@(ViewBag.IsNew ? "新增文章" : "编辑文章")</span>
+        <a href="@backUrl">返回</a>
+    </div>
+
+
+    <input type="hidden" id="articleId" name="articleId" value="@(ViewBag.IsNew ?  "" : Model.ArticleId.ToString() )" />
+    <input type="hidden" id="contentHidden" value="@Model.Content" />
+
+    <div class="form-line">
+        <div><span class="must">*</span>题目：</div>
+        <input type="text" name="title" value="@Model.Title" class="addtitle" id="title" />
+    </div>
+
+    <div class="form-line">
+        <div><span class="must">*</span>Url题目（url中使用）：</div>
+        <input type="text" name="urlTitle" value="@Model.UrlTitle" class="addtitle" id="urlTitle" />
+    </div>
+
+    <div class="form-line">
+        <div>关键词（英文逗号分隔）：</div>
+        <input type="text" name="keywords" value="@Model.KeyWords" class="addtitle" id="keywords" />
+    </div>
+
+    内容：
+    <br />
+    <script id="caseContent" name="caseContent" type="text/plain" style="width:100%;height:400px;margin-top:5px;">
+    </script>
+
+    <input type="button" value="选择标签" id="selectLabel" />
+    <div id="labelContainer">
+
+    </div>
+    <div id="labelDb" class="hidden">
+    </div>
+    <p></p>
+    <div>
+        <input type="text" id="labelNew" maxlength="50" />
+        <input type="button" value="新增标签" id="btnLableNew" />
+        <span id="labelNewMsg"></span>
+    </div>
+
+    <div class="handleContainer">
+        <div class="handlearea">
+            <button type="button" class="savebtn" id="btnSave">保存</button>
+            <button type="button" id="btnSavePreview">保存并预览</button>
+        </div>
+
+        <div class="msg" id="msg">
+            &nbsp;
+        </div>
+    </div>
+
+    @Html.AntiForgeryToken()
+</div>
+@section footer{
+
+    @Scripts.Render("~/Scripts/ueditor/js")
+    @Scripts.Render("~/Scripts/ueditor/lang/zh-cn/zh")
+
+    <script>
+        $(function () {
+
+            var articleId = $("#articleId").val();
+
+            function isEdit() {
+                return articleId;
+            }
+
+            var ue = "";
+            initUEditor();
+
+            function initUEditor() {
+                if (!ue) {
+                    ue = UE.getEditor('caseContent');
+                }
+            }
+
+            $("#btnSave").click(function () {
+                save(function (id) {
+                    articleId = id;
+                });
+            });
+
+            $("#btnSavePreview").click(function () {
+                save(function (id) {
+                    articleId = id;
+                    window.open("/Home/Detail/" + id, "_blank");
+                });
+            });
+
+            function save(callback) {
+                var data = {};
+
+                data.title = $.trim($("#title").val());
+                data.urlTitle = $.trim($("#urlTitle").val());
+                data.keywords = $.trim($("#keywords").val());
+                data.lables = getSelectedItems();
+                if (ue)
+                    data.content = ue.getContent();
+
+                if (!validateData(data))
+                    return;
+
+                data.ArticleId = articleId;
+
+                $.ajax({
+                    type: "Post",
+                    url: "/backmgr/Article/Add",
+                    data: AddAntiForgeryToken(data),
+                    success: function (result) {
+                        if (result.code == 200) {
+                            showMsg('保存成功');
+                            setTimeout(function () { showMsg("&nbsp;"); }, 1000);
+                            if (callback) callback(result.id);
+                        } else {
+                            showMsg(result.msg);
+                        }
+                    },
+                    error: function (msg) {
+                        alert(msg);
+                    }
+
+                });
+            }
+
+            function validateData(data) {
+                //todo:
+                return true;
+            }
+
+            function showMsg(msg) {
+                $('#msg').html(msg);
+            }
+
+            //编辑时，初始化数据
+            if (isEdit()) {
+                ue.ready(function () {
+                    ue.setContent($("#contentHidden").val());
+                });
+
+                initLabelContainer();
+            }
+
+            //定时保存
+            setInterval(function () {
+                save(function (id) {
+                    articleId = id;
+                });
+            }, 1000 * 30);
+
+            AddAntiForgeryToken = function (data) {
+                data.__RequestVerificationToken = $('input[name=__RequestVerificationToken]').val();
+                return data;
+            };
+
+            $("#selectLabel").click(function () {
+                //layer.open({
+                //    type: 2,
+                //    title:'选择标签',
+                //    area: ['700px', '450px'],
+                //    fixed: false,
+                //    maxmin: false,
+                //    shadeClose:true,
+                //    content: 'test/iframe.html'
+                //});
+
+                if ($("#labelDb").hasClass('hidden')) {
+                    $("#labelDb").removeClass('hidden');
+
+                    $.get("/backmgr/label/getall", function (result) {
+                        if (result.code == 200) {
+                            console.log(result.data);
+                            buildList(result.data);
+                        }
+                    });
+
+                } else {
+                    $("#labelDb").addClass('hidden');
+                }
+
+            });
+
+            function initLabelContainer() {
+                $.get("/backmgr/label/GetLablesByArticle", { articleId: articleId }, function (result) {
+                    if (result.code == 200) {
+                        console.log(result.data);
+                        var arr = result.data;
+                        for (var i = 0; i < arr.length; i++) {
+                            var item = arr[i];
+                            //这里和selectLabel时代码相同
+                            var div = $("<div onclick='remove(this)'>{1} <span>x</span></div>".replace("{1}", item.Name));
+                            div.data(item);
+                            $("#labelContainer").append(div);
+                        }
+                    }
+                });
+            }
+
+            $("#btnLableNew").click(function () {
+
+                $("#btnLableNew").attr("disabled", "true");
+
+                var labelNew = $.trim($("#labelNew").val());
+                if (!labelNew) {
+                    $("#labelNewMsg").html('新标签名称不能为空');
+                    $("#btnLableNew").removeAttr("disabled");
+                    return;
+                }
+                var data = {};
+                data.LabelName = labelNew;
+
+                $.ajax({
+                    type: "Post",
+                    url: "/backmgr/Label/Add",
+                    data: AddAntiForgeryToken(data),
+                    success: function (result) {
+                        if (result.code == 200) {                            
+                            $("#labelNewMsg").html('新增成功');
+                            $("#labelNew").val('');
+
+                            //展示列表
+                            $("#labelDb").addClass('hidden');
+                            $("#selectLabel").click();
+                        } else {                            
+                            $("#labelNewMsg").html(result.msg);
+                        }
+                        $("#btnLableNew").removeAttr("disabled");
+                    },
+                    error: function (msg) {
+                        $("#labelNewMsg").html(msg);
+                        $("#btnLableNew").removeAttr("disabled");
+                    }
+
+                });
+            });
+
+
+        });
+
+
+
+        function buildList(arr) {
+            $("#labelDb").html("");
+            for (var i = 0; i < arr.length; i++) {
+                var item = arr[i];
+                buildItem(item);
+            }
+        }
+
+        function buildItem(item) {
+            var div = $("<div onclick='selectLabel(this)'>{1}</div>".replace("{1}", item.Name));
+            div.data(item);
+            $("#labelDb").append(div);
+        }
+
+        function selectLabel(ele) {
+            var item = $(ele).data();
+            var div = $("<div onclick='remove(this)'>{1} <span>x</span></div>".replace("{1}", item.Name));
+            div.data(item);
+            $("#labelContainer").append(div);
+        }
+
+        //得到选中的标签id值列表
+        function getSelectedItems() {
+            var arr = new Array();
+            var divs = $("#labelContainer").find('div');
+            for (var i = 0; i < divs.length; i++) {
+                var item = divs[i];
+                arr.push($(item).data().LabelId);
+            }
+            console.log(arr);
+            return arr;
+        }
+
+        function remove(ele) {
+            event.cancelBubble = true;
+            //$($(ele).parent()).remove();
+            $(ele).remove();
+        }
+
+
+    </script>
+}

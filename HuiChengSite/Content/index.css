@@ -1,0 +1,24 @@
+﻿.record {
+    border-bottom: 1px solid gray;
+    margin-bottom: 30px;
+    line-height: 30px;
+    padding: 5px 0px;    
+}
+
+    .record:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+.indexcontainer {    
+}
+
+    .indexcontainer .date {
+        font-size: 12px;
+    }
+
+.newflag img {
+    height: 25px;
+    vertical-align: middle;
+    margin-bottom: 3px;
+    display: inline-block;
+}

@@ -1,0 +1,62 @@
+﻿@model StaticPagedList<Article>
+
+@{
+    ViewBag.Title = "首页";
+    if (HuiChengSite.Common.BrowserHelper.IsPhone())
+    {
+        Layout = "~/Views/Shared/_mLayout.cshtml";
+    }
+}
+
+@section header{
+    @if (HuiChengSite.Common.BrowserHelper.IsPhone())
+    {
+        @Styles.Render("~/Content/mindex")
+    }
+    else
+    {
+        @Styles.Render("~/Content/index")
+    }
+}
+
+<div class="content">
+    <div class="indexcontainer">
+        @if (Model == null || Model.Count == 0)
+        {
+            <div class="record">
+                暂无数据
+            </div>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <div class="record">
+                    <div>
+                        @{
+                            string url = string.IsNullOrEmpty(item.UrlTitle) ?
+                            Url.Action("Detail", "Home", new { id = item.ArticleId }) :
+                            $"/articles/{item.UrlTitle}.html";
+                        }
+
+                        <a href="@(url)" title="@item.Title">
+                            @if (item.CreatedTime.AddDays(7) > DateTime.Now)
+                            {
+                                <span class="newflag"><img src="~/Images/new.png" /></span>
+                            }
+                            <span>@item.Title</span>
+                        </a>
+                    </div>
+                    <div>
+                        <span class="date">@item.DisplayCreatedTime.ToString("yyyy-MM-dd")</span>
+                    </div>
+                </div>
+            }
+        }
+        @if (Model.PageCount > 1)
+        {
+
+            <div>@Html.PagedListPager((IPagedList)(Model), p => Url.Action("Index", new { page = p }), PagedListRenderOptions.ClassicPlusFirstAndLast)</div>
+        }
+    </div>
+</div>

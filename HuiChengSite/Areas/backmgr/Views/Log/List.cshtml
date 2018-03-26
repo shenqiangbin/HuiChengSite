@@ -1,0 +1,45 @@
+﻿@model StaticPagedList<Log>
+
+@{
+    ViewBag.Title = "日志";
+}
+
+@section header{
+    @Styles.Render("~/Content/backLogList")
+}
+
+<div class="content">
+    <div class="indexcontainer">
+        <div class="header">
+            当前日志只保留前 @(HuiChengSite.Common.Configer.Get("logMaxCount")) 条
+        </div>
+
+        @if (Model == null || Model.Count == 0)
+        {
+            <div class="record">
+                暂无数据
+            </div>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <div class="record @(item.Level == Level.Error.ToString() ? "error" : "")">
+                    <span class="date">@item.Date.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                    <span>@item.Logger</span>
+                    <span>@item.Level</span>
+                    <div>@item.Message</div>
+                </div>
+            }
+        }
+        @if (Model.PageCount > 1)
+        {
+            <div>@Html.PagedListPager((IPagedList)(Model), p => Url.Action("List", new { page = p }), PagedListRenderOptions.ClassicPlusFirstAndLast)</div>
+        }
+
+    </div>
+</div>
+
+@section footer{
+
+}

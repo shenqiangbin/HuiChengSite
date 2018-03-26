@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HuiChengSite", "HuiChengSite\HuiChengSite.csproj", "{51D06BBA-4976-4E64-835B-8E0203B2F45D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9C8FA98E-5BCD-434F-B753-CD69C2C5FD78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication", "ConsoleApplication\ConsoleApplication.csproj", "{D3F0E139-73B8-4C9A-962E-AF60B86DEA54}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{51D06BBA-4976-4E64-835B-8E0203B2F45D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51D06BBA-4976-4E64-835B-8E0203B2F45D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51D06BBA-4976-4E64-835B-8E0203B2F45D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51D06BBA-4976-4E64-835B-8E0203B2F45D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3F0E139-73B8-4C9A-962E-AF60B86DEA54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3F0E139-73B8-4C9A-962E-AF60B86DEA54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3F0E139-73B8-4C9A-962E-AF60B86DEA54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3F0E139-73B8-4C9A-962E-AF60B86DEA54}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

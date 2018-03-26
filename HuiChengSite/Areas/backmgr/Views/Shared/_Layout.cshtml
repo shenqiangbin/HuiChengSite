@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title | SQBER</title>
+    @Styles.Render("~/Content/css")
+    @RenderSection("header", required: false)
+    <style>
+        body {
+            background-color: white !important;
+        }
+
+        .nav-account {
+            display: inline-block;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <div class="nav-content">
+            <span class="logo"><a href="/home/index">博客</a></span>
+            @if (HuiChengSite.Common.ContextUser.IsLogined) { 
+                <span class="navli">
+                    <a href="@Url.Action("index","home")">首页</a>
+                    <a href="@Url.Action("list","log")">错误日志</a>
+                </span>
+            }
+            <div class="nav-account">
+                @if (HuiChengSite.Common.ContextUser.IsLogined)
+                {
+                    <span>您好，@HuiChengSite.Common.ContextUser.UserName</span>
+                    <span><a href="@Url.Action("LogOut", "Account")">退出</a></span>
+                }
+                else
+                {
+                    @*<span><a href="@Url.Action("Login", "Account")">登录</a></span>*@
+                }
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="~/Scripts/layer.js"></script>
+    @Scripts.Render("~/Scripts/backcommon")
+    @RenderSection("footer", required: false)
+
+</body>
+</html>

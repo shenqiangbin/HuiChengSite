@@ -1,0 +1,67 @@
+﻿@model StaticPagedList<CommentInfo>
+
+@{
+    ViewBag.Title = "首页";
+    if (HuiChengSite.Common.BrowserHelper.IsPhone())
+    {
+        Layout = "~/Views/Shared/_mLayout.cshtml";
+    }
+}
+
+@section header{
+    @if (HuiChengSite.Common.BrowserHelper.IsPhone())
+    {
+        @Styles.Render("~/Content/mCommentList")
+    }
+    else
+    {
+        @Styles.Render("~/Content/commentList")
+    }
+}
+
+<div class="content">
+    <div class="indexcontainer">
+        <span><a href="@Url.Action("index","home")">返回</a></span>
+        <h4>评论信息</h4>               
+        @if (Model == null || Model.Count == 0)
+        {
+            <div class="record">
+                暂无数据
+            </div>
+        }
+        else
+        {
+            <table>
+                @foreach (var item in Model)
+                {
+                    <tr class="record">
+                        <td style="width:80px;">
+                            <a href="javascript:del(@item.CommentId);">删除</a>
+                        </td>
+                        <td style="width:300px;">
+                            <a target="_blank" href="@Url.Action("Detail","Home", new { area = "", id = item.ArticleId })">@item.ArticleTitle</a>
+                        </td>
+                        <td style="width:60px;">@item.UserName</td>
+                        <td style="width:150px;">@item.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@Html.Raw(item.Content)</td>
+                    </tr>
+                }
+            </table>
+        }
+        @if (Model.PageCount > 1)
+        {
+            <div>@Html.PagedListPager((IPagedList)(Model), p => Url.Action("List", new { page = p }), PagedListRenderOptions.ClassicPlusFirstAndLast)</div>
+        }
+    </div>
+</div>
+
+<script>
+    var delUrl = '@Url.Action("delete")';
+    function del(commentId) {
+        if (confirm("删除确认？")) {
+            $.post(delUrl, { commentId:commentId }, function () {
+                window.location.reload();
+            });
+        }
+    }
+</script>
